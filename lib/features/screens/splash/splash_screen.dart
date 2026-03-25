@@ -32,11 +32,11 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!seenOnboard) {
       Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
     }
-    else if (isLoggedIn) {
-      Navigator.pushReplacementNamed(context, AppRoutes.main);
-    }
+    // else if (isLoggedIn) {
+    //   Navigator.pushReplacementNamed(context, AppRoutes.login);
+    // }
     else {
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      Navigator.pushReplacementNamed(context, AppRoutes.main);
     }
   }
 

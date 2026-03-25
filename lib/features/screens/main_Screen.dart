@@ -1,5 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:store_nia_me/features/screens/pages/home.dart';
+
+import '../../core/theme/app_colors.dart';
+import '../auth/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,9 +31,10 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  int currentIndex = 0;
 
   final List<Widget> _pages = const [
-    Center(child: Text("Home")),
+    Home(),
     Center(child: Text("Categories")),
     Center(child: Text("Scanner")),
     Center(child: Text("Buy Again")),
@@ -44,22 +50,82 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: _pages[_selectedIndex],
+
+      ///Drawer Navigation
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              child: Text("My App", style: TextStyle(fontSize: 22)),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text("Dashboard"),
+              onTap: () {
+                setState(() => currentIndex = 0);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text("Profile"),
+              onTap: () {
+                setState(() => currentIndex = 2);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text("Logout"),
+              onTap: () async {
+                // 1️⃣ Disconnect Google (forces email chooser next time)
+                // await GoogleSignIn().disconnect();
+
+                // 2️⃣ Sign out Firebase
+                await FirebaseAuth.instance.signOut();
+
+                // 3️⃣ Clear ALL SharedPreferences
+                //final prefs = await SharedPreferences.getInstance();
+                // await prefs.clear();   // <-- clears full local storage
+
+                // 4️⃣ Navigate to Login screen
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      (route) => false,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
 
       /// 🔹 FAB (Center Button)
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
+        elevation: 8,
+        backgroundColor: AppColors.primaryColor,
+        shape: const CircleBorder(), // Ensures perfect circle
         onPressed: () {
           setState(() {
             _selectedIndex = 2;
           });
         },
-        child: const Icon(Icons.qr_code_scanner, color: Colors.white),
+        child: SvgPicture.asset(
+          'assets/icons/ic_scanner.svg',
+          width: 28,
+          height: 28,
+          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       /// 🔹 Bottom Navigation
       bottomNavigationBar: BottomAppBar(
+        color: AppColors.pageBackgroundColor,
+        surfaceTintColor: Colors.transparent,  // ← removes M3 overlay tint
+        shadowColor: Colors.transparent,
         shape: const CircularNotchedRectangle(),
         notchMargin: 8,
         child: SizedBox(
@@ -70,7 +136,7 @@ class _MainScreenState extends State<MainScreen> {
               NavItem(
                 index: 0,
                 selectedIndex: _selectedIndex,
-                label: "Home",
+                label: "NIA",
                 lineIcon: Icons.home_outlined,
                 fillIcon: Icons.home,
                 onTap: _onItemTapped,
@@ -178,3 +244,4 @@ class NavItem extends StatelessWidget {
     );
   }
 }
+
