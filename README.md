@@ -6,7 +6,7 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
-# 🛒![launcher_icon@2x.png](assets/icons/launcher_icon%402x.png width=200) NIA E-Commerce App
+# 🛒![logo-main_nia-logo.png](assets/icons/logo-main_nia-logo.png) NIA E-Commerce App
 
 A modern and scalable **Flutter-based E-commerce application** designed for seamless shopping experiences.
 Built with performance, clean UI, and real-world usability in mind.
