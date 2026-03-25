@@ -22,7 +22,7 @@ Built with performance, clean UI, and real-world usability in mind.
 * 🔐 User Authentication (Login / Signup)
 * 💳 Checkout & Payment Flow (Extendable)
 * 📦 Order Management
-* 📱 Fully Responsive UI
+* 📱 User Comfortable UI
 
 ---
 
