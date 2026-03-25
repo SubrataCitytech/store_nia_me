@@ -6,15 +6,10 @@
 
 #include "generated_plugin_registrant.h"
 
-<<<<<<< HEAD
 #include <flutter_secure_storage_linux/flutter_secure_storage_linux_plugin.h>
 
 void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) flutter_secure_storage_linux_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "FlutterSecureStorageLinuxPlugin");
   flutter_secure_storage_linux_plugin_register_with_registrar(flutter_secure_storage_linux_registrar);
-=======
-
-void fl_register_plugins(FlPluginRegistry* registry) {
->>>>>>> 88579bdd3ec42bb0fd27559d36d474f04833315b
 }
