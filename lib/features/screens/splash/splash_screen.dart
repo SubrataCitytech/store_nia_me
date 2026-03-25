@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/routes/app_routes.dart';
-import '../../core/theme/app_colors.dart';
+import '../../../core/routes/app_routes.dart';
+import '../../../core/theme/app_colors.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,9 +34,10 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     // else if (isLoggedIn) {
     //   Navigator.pushReplacementNamed(context, AppRoutes.home);
-    // } else {
-    //   Navigator.pushReplacementNamed(context, AppRoutes.login);
     // }
+    else {
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    }
   }
 
 

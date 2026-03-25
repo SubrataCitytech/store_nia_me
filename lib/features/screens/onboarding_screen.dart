@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../core/theme/app_colors.dart';
-import '../core/theme/app_text_style.dart';
-import '../core/theme/string_extension.dart';
+import '../../core/routes/app_routes.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_style.dart';
+import '../../core/theme/string_extension.dart';
+
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -116,13 +119,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    // final prefs = await SharedPreferences.getInstance();
-                    // await prefs.setBool('seenOnboard', true);
-                    //
-                    // Navigator.pushReplacementNamed(
-                    //   context,
-                    //   AppRoutes.login,
-                    // );
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setBool('seenOnboard', true);
+
+                    Navigator.pushReplacementNamed(
+                      context,
+                      AppRoutes.login,
+                    );
                   },
                   child: Text(
                     "Get Started".capitalizeWords(),
@@ -140,13 +143,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   /// Skip Button
                   TextButton(
                     onPressed: () async {
-                      // final prefs = await SharedPreferences.getInstance();
-                      // await prefs.setBool('seenOnboard', true);
-                      //
-                      // Navigator.pushReplacementNamed(
-                      //   context,
-                      //   AppRoutes.login,
-                      // );
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('seenOnboard', true);
+
+                      Navigator.pushReplacementNamed(
+                        context,
+                        AppRoutes.login,
+                      );
                     },
                     child: Text(
                       "Skip".capitalizeWords(),

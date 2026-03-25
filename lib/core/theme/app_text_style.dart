@@ -39,4 +39,16 @@ class AppTextStyles {
     fontSize: 12,
     fontWeight: FontWeight.w900,
   );
+
+  static const TextStyle loginHeadingText = TextStyle(
+    fontFamily: AppFonts.primary,
+    fontSize: 36,
+    fontWeight: FontWeight.w900,
+  );
+
+  static const TextStyle loginSubHeadingText = TextStyle(
+    fontFamily: AppFonts.primary,
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
 }
