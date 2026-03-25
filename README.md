@@ -119,3 +119,14 @@ GitHub: https://github.com/SubrataCitytech
 
 If you like this project, give it a ⭐ on GitHub!
 
+## 🙏 Acknowledgements
+
+This project would not have been possible without the support and contributions of amazing individuals.
+
+Special thanks to:
+
+- ** C ** – for continuous guidance and support
+- All contributors – for their valuable inputs and efforts
+
+💡 Your support inspires innovation and growth.
+
