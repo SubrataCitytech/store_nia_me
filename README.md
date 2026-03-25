@@ -102,13 +102,13 @@ Feel free to fork the repo and submit a pull request.
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the ![citytech_logo.png](assets/icons/citytech_logo.png) **_[Citytech](https://www.citytechcorp.com/contact-us/)_** License.
 
 ---
 
 ## 👨‍💻 Author
 
-**Subrata Ghosh**
+**Mr. Subrata Ghosh **
 🚀 Flutter Developer | AI Enthusiast
 
 GitHub: https://github.com/SubrataCitytech
