@@ -109,7 +109,7 @@ This project is licensed under the ![citytech_logo.png](assets/icons/citytech_lo
 ## 👨‍💻 Author
 
 **Mr. Subrata Ghosh **
-🚀 UI Developer | Frontend Developer | Flutter Developer | AI Enthusiast | Python Learner 
+🚀 UI Developer | Flutter Developer | AI Enthusiast 
 
 GitHub: https://github.com/SubrataCitytech
 
