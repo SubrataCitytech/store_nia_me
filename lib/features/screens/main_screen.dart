@@ -6,22 +6,6 @@ import 'package:store_nia_me/features/screens/pages/home.dart';
 import '../../core/theme/app_colors.dart';
 import '../auth/login_screen.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MainScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -31,7 +15,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  int currentIndex = 0;
 
   final List<Widget> _pages = const [
     Home(),
@@ -64,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
               leading: const Icon(Icons.home),
               title: const Text("Dashboard"),
               onTap: () {
-                setState(() => currentIndex = 0);
+                setState(() => _selectedIndex = 0);
                 Navigator.pop(context);
               },
             ),
@@ -72,29 +55,24 @@ class _MainScreenState extends State<MainScreen> {
               leading: const Icon(Icons.person),
               title: const Text("Profile"),
               onTap: () {
-                setState(() => currentIndex = 2);
+                setState(() => _selectedIndex = 2);
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.person),
+              leading: const Icon(Icons.logout),
               title: const Text("Logout"),
               onTap: () async {
-                // 1️⃣ Disconnect Google (forces email chooser next time)
-                // await GoogleSignIn().disconnect();
-
-                // 2️⃣ Sign out Firebase
+                // 1️⃣ Sign out Firebase
                 await FirebaseAuth.instance.signOut();
 
-                // 3️⃣ Clear ALL SharedPreferences
-                //final prefs = await SharedPreferences.getInstance();
-                // await prefs.clear();   // <-- clears full local storage
+                if (!context.mounted) return;
 
-                // 4️⃣ Navigate to Login screen
+                // 2️⃣ Navigate to Login screen
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      (route) => false,
+                  (route) => false,
                 );
               },
             ),
@@ -104,27 +82,74 @@ class _MainScreenState extends State<MainScreen> {
 
       /// 🔹 FAB (Center Button)
       floatingActionButton: FloatingActionButton(
-        elevation: 8,
-        backgroundColor: AppColors.primaryColor,
-        shape: const CircleBorder(), // Ensures perfect circle
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        shape: const CircleBorder(),
         onPressed: () {
           setState(() {
             _selectedIndex = 2;
           });
         },
-        child: SvgPicture.asset(
-          'assets/icons/ic_scanner.svg',
-          width: 28,
-          height: 28,
-          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            // color: const Color(0xFF1A8FFF),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0x331A8FFF),
+                blurRadius: 20,
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: const Color(0x331A8FFF),
+                blurRadius: 50,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: ClipOval(
+            child: SvgPicture.asset(
+              'assets/icons/ic_market_place_bg.svg',
+              fit: BoxFit.contain,
+            ),
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FloatingActionButton(
+      //   elevation: 8,
+      //   backgroundColor: Colors.transparent,
+      //   shape: const CircleBorder(),
+      //   splashColor: Colors.transparent,
+      //   onPressed: () {
+      //     setState(() {
+      //       _selectedIndex = 2;
+      //     });
+      //   },
+      //   child: ClipOval(
+      //     child: SvgPicture.asset(
+      //       'assets/icons/ic_market_place_wave.svg',
+      //       width: 60,   // match your FAB size
+      //       height: 60,
+      //       fit: BoxFit.cover,
+      //     ),
+      //   ),
+      //   // child: SvgPicture.asset(
+      //   //   'assets/icons/ic_market_place_wave.svg',
+      //   //   width: double.infinity,
+      //   //   height: double.infinity,
+      //   //   fit: BoxFit.cover,
+      //   // ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       /// 🔹 Bottom Navigation
       bottomNavigationBar: BottomAppBar(
-        color: AppColors.pageBackgroundColor,
-        surfaceTintColor: Colors.transparent,  // ← removes M3 overlay tint
+        color: AppColors.whiteColor,
+        surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         shape: const CircularNotchedRectangle(),
         notchMargin: 8,
@@ -136,17 +161,34 @@ class _MainScreenState extends State<MainScreen> {
               NavItem(
                 index: 0,
                 selectedIndex: _selectedIndex,
-                label: "NIA",
-                lineIcon: Icons.home_outlined,
-                fillIcon: Icons.home,
+                label: "Home",
+                lineIcon: SvgPicture.asset(
+                  'assets/icons/ic_home_line.svg',
+                  width: 24,
+                  height: 24,
+                ),
+                fillIcon: SvgPicture.asset(
+                  'assets/icons/ic_home_fill.svg',
+                  width: 24,
+                  height: 24,
+                  // colorFilter: const ColorFilter.mode(Colors.blue, BlendMode.srcIn),
+                ),
                 onTap: _onItemTapped,
               ),
               NavItem(
                 index: 1,
                 selectedIndex: _selectedIndex,
                 label: "Categories",
-                lineIcon: Icons.grid_view_outlined,
-                fillIcon: Icons.grid_view,
+                lineIcon: SvgPicture.asset(
+                  'assets/icons/ic_categories_line.svg',
+                  width: 24,
+                  height: 24,
+                ),
+                fillIcon: SvgPicture.asset(
+                  'assets/icons/ic_categories_fill.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 onTap: _onItemTapped,
               ),
 
@@ -155,17 +197,33 @@ class _MainScreenState extends State<MainScreen> {
               NavItem(
                 index: 3,
                 selectedIndex: _selectedIndex,
-                label: "Buy Again",
-                lineIcon: Icons.shopping_bag_outlined,
-                fillIcon: Icons.shopping_bag,
+                label: "Account",
+                lineIcon: SvgPicture.asset(
+                  'assets/icons/ic_user_line.svg',
+                  width: 24,
+                  height: 24,
+                ),
+                fillIcon: SvgPicture.asset(
+                  'assets/icons/ic_user_fill.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 onTap: _onItemTapped,
               ),
               NavItem(
                 index: 4,
                 selectedIndex: _selectedIndex,
-                label: "Track",
-                lineIcon: Icons.local_shipping_outlined,
-                fillIcon: Icons.local_shipping,
+                label: "Cart",
+                lineIcon: SvgPicture.asset(
+                  'assets/icons/ic_basket_line.svg',
+                  width: 24,
+                  height: 24,
+                ),
+                fillIcon: SvgPicture.asset(
+                  'assets/icons/ic_basket_fill.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 onTap: _onItemTapped,
               ),
             ],
@@ -181,8 +239,8 @@ class NavItem extends StatelessWidget {
   final int index;
   final int selectedIndex;
   final String label;
-  final IconData lineIcon;
-  final IconData fillIcon;
+  final Widget lineIcon;
+  final Widget fillIcon;
   final Function(int) onTap;
 
   const NavItem({
@@ -200,6 +258,9 @@ class NavItem extends StatelessWidget {
     final bool isSelected = selectedIndex == index;
 
     return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
       onTap: () => onTap(index),
       borderRadius: BorderRadius.circular(10),
       child: Column(
@@ -207,34 +268,24 @@ class NavItem extends StatelessWidget {
         children: [
           /// 🔥 Bounce Animation
           TweenAnimationBuilder<double>(
-            tween: Tween<double>(
-              begin: 0.9,
-              end: isSelected ? 1.2 : 1.0,
-            ),
-            duration: const Duration(milliseconds: 300),
+            tween: Tween<double>(begin: 0.9, end: isSelected ? 1.05 : 0.98),
+            duration: const Duration(milliseconds: 500),
             curve: Curves.elasticOut,
             builder: (context, scale, child) {
-              return Transform.scale(
-                scale: scale,
-                child: child,
-              );
+              return Transform.scale(scale: scale, child: child);
             },
-            child: Icon(
-              isSelected ? fillIcon : lineIcon, // 🔥 ICON CHANGE HERE
-              size: 26,
-              color: isSelected ? Colors.blue : Colors.grey,
-            ),
+            child: isSelected ? fillIcon : lineIcon,
           ),
 
           const SizedBox(height: 4),
 
           /// 🔥 Text Animation
           AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 100),
             style: TextStyle(
+              // fontFamily: AppFonts.primary,
               fontSize: 12,
-              fontWeight:
-              isSelected ? FontWeight.w600 : FontWeight.w400,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               color: isSelected ? Colors.blue : Colors.grey,
             ),
             child: Text(label),
@@ -244,4 +295,3 @@ class NavItem extends StatelessWidget {
     );
   }
 }
-

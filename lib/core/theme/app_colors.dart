@@ -4,7 +4,7 @@ class AppColors {
   AppColors._(); // prevents instantiation
 
   // Base color
-  static const primaryColor = Color(0xFF2669F6);
+  static const primaryColor = Color(0xFF187CEA);
   static const pageBackgroundColor = Color(0xFFF4F4F4);
   static const textGreyColor = Color(0xFF828A89);
   static const textBlackColor = Color(0xFF111111);

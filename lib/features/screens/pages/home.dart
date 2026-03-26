@@ -1221,65 +1221,6 @@ class _FooterSection extends StatelessWidget {
   }
 }
 
-// ─────────────────────────── BOTTOM NAV ───────────────────────────
-// class _BottomNav extends StatelessWidget {
-//   final int currentIndex;
-//   final ValueChanged<int> onTap;
-//   const _BottomNav({required this.currentIndex, required this.onTap});
-//
-//   static const _items = [
-//     {'icon': Icons.home_rounded, 'label': 'Home'},
-//     {'icon': Icons.grid_view_rounded, 'label': 'Categories'},
-//     {'icon': Icons.storefront_rounded, 'label': 'Marketplace'},
-//     {'icon': Icons.person_rounded, 'label': 'Account'},
-//     {'icon': Icons.shopping_cart_rounded, 'label': 'Cart'},
-//   ];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         color: NIAColors.white,
-//         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.09), blurRadius: 16, offset: const Offset(0, -4))],
-//       ),
-//       padding: const EdgeInsets.symmetric(vertical: 8),
-//       child: SafeArea(
-//         top: false,
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           children: List.generate(_items.length, (i) {
-//             final sel = i == currentIndex;
-//             return GestureDetector(
-//               onTap: () => onTap(i),
-//               child: AnimatedContainer(
-//                 duration: const Duration(milliseconds: 200),
-//                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-//                 decoration: BoxDecoration(
-//                   color: sel ? NIAColors.teal.withOpacity(0.1) : Colors.transparent,
-//                   borderRadius: BorderRadius.circular(12),
-//                 ),
-//                 child: Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     Icon(_items[i]['icon'] as IconData, size: 21, color: sel ? NIAColors.teal : NIAColors.textGrey),
-//                     const SizedBox(height: 2),
-//                     Text(_items[i]['label'] as String,
-//                       style: TextStyle(
-//                         fontSize: 9.5,
-//                         color: sel ? NIAColors.teal : NIAColors.textGrey,
-//                         fontWeight: sel ? FontWeight.w700 : FontWeight.w400,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             );
-//           }),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 // ─────────────────────────── CHAT BUBBLE ───────────────────────────
 class _ChatBubble extends StatelessWidget {
