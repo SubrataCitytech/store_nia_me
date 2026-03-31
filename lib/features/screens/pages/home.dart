@@ -3,7 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store_nia_me/core/theme/app_colors.dart';
 
+import '../../../core/repository/offerBanner_repository.dart';
+import '../../../core/theme/app_fonts.dart';
 import '../../../core/theme/app_text_style.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 // ─────────────────────────── THEME ───────────────────────────
 class NIAColors {
@@ -21,7 +26,8 @@ class NIAColors {
 }
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final VoidCallback openDrawer; // ✅ add this
+  const Home({super.key, required this.openDrawer});
   @override
   State<Home> createState() => _HomeState();
 }
@@ -30,12 +36,16 @@ class _HomeState extends State<Home> {
   int _bannerPage = 0;
   bool _chatOpen = true;
   final PageController _bannerCtrl = PageController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
     _bannerCtrl.dispose();
     super.dispose();
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +57,7 @@ class _HomeState extends State<Home> {
             value: SystemUiOverlayStyle.dark,
             child: Column(
               children: [
-                _TopAppBar(),
+                _TopAppBar(openDrawer: widget.openDrawer),
                 _CategoryTabBar(),
                 Expanded(
                   child: SingleChildScrollView(
@@ -104,8 +114,13 @@ class _HomeState extends State<Home> {
   }
 }
 
+
+
 // ─────────────────────────── TOP APP BAR ───────────────────────────
 class _TopAppBar extends StatelessWidget {
+  final VoidCallback openDrawer;
+
+  const _TopAppBar({required this.openDrawer});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -233,10 +248,15 @@ class _TopAppBar extends StatelessWidget {
                   Row(
                     children: [
                       // Menu Icon
-                      Icon(
-                        Icons.menu,
-                        size: 30,
-                        color: AppColors.textGreyColor,
+                      Builder(
+                        builder: (context) => IconButton(
+                          icon: Icon(
+                            Icons.menu,
+                            size: 30,
+                            color: AppColors.textGreyColor,
+                          ),
+                          onPressed: openDrawer,
+                        ),
                       ),
 
                       const SizedBox(width: 10),
@@ -292,51 +312,120 @@ class _CategoryTabBar extends StatefulWidget {
 
 class _CategoryTabBarState extends State<_CategoryTabBar> {
   int _selected = 0;
-  final _tabs = [
-    'All',
-    'Transfers',
-    'Microwave',
-    'MultifunctionOvens',
-    'Cookers',
+
+  final List<Map<String, String>> _tabs = [
+    {"label": "All", "icon": "assets/icons/ic_tab_all@4x.png"},
+    {"label": "Blenders", "icon": "assets/icons/ic_tab_blenders@4x.png"},
+    {"label": "Microwaves", "icon": "assets/icons/ic_tab_microwaves@4x.png"},
+    {
+      "label": "Multifunction Ovens",
+      "icon": "assets/icons/ic_tab_ovens@4x.png",
+    },
+    {"label": "Washers", "icon": "assets/icons/ic_tab_washers@4x.png"},
+    {"label": "Kettles", "icon": "assets/icons/ic_tab_kettles@4x.png"},
+    {
+      "label": "Refrigerators",
+      "icon": "assets/icons/ic_tab_refrigerators@4x.png",
+    },
+    {"label": "Washer/Dryers", "icon": "assets/icons/ic_tab_dryers@4x.png"},
+    {"label": "Stand Mixers", "icon": "assets/icons/ic_tab_mixers@4x.png"},
+    {
+      "label": "Air Conditioners",
+      "icon": "assets/icons/ic_tab_airconditioners@4x.png",
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: NIAColors.white,
-      height: 38,
+      decoration: const BoxDecoration(
+        color: AppColors.pageBackgroundColor,
+        border: Border(
+          bottom: BorderSide(
+            color: Color(0xFFE0E3EA), // light grey line
+            width: 1,
+          ),
+        ),
+      ),
+      height: 70, // increase height for icon + text
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         itemCount: _tabs.length,
         itemBuilder: (_, i) {
           final sel = i == _selected;
+
           return GestureDetector(
             onTap: () => setState(() => _selected = i),
+              child: ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 80),
             child: Container(
-              margin: const EdgeInsets.only(right: 6, bottom: 4),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-              decoration: BoxDecoration(
-                color: sel ? NIAColors.teal : Colors.transparent,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: sel ? NIAColors.teal : const Color(0xFFE0E3EA),
+              margin: const EdgeInsets.only(right: 10), // ✅ moved outside
+              child: CustomPaint(
+                painter: _TabIndicatorPainter(
+                  isSelected: sel,
+                  color: AppColors.primaryColor,
                 ),
-              ),
-              child: Text(
-                _tabs[i],
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: sel ? FontWeight.w700 : FontWeight.w400,
-                  color: sel ? Colors.white : NIAColors.textGrey,
+                child: Container(
+                  // margin removed from here
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  child: Column(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // ✅ center, not end
+                    children: [
+                      Image.asset(_tabs[i]["icon"]!, height: 30, width: 30),
+                      const SizedBox(height: 6),
+                      Text(
+                        _tabs[i]["label"]!,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: sel ? FontWeight.w700 : FontWeight.w400,
+                          color: sel
+                              ? AppColors.primaryColor
+                              : AppColors.textGreyColor,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
+              ),
           );
         },
       ),
     );
   }
+}
+
+class _TabIndicatorPainter extends CustomPainter {
+  final bool isSelected;
+  final Color color;
+  const _TabIndicatorPainter({required this.isSelected, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (!isSelected) return;
+
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    // Rounded top rectangle at the bottom
+    final rect = RRect.fromRectAndCorners(
+      Rect.fromLTWH(0, size.height - 4, size.width, 4),
+      topLeft: const Radius.circular(4),
+      topRight: const Radius.circular(4),
+    );
+
+    canvas.drawRRect(rect, paint);
+  }
+
+  @override
+  bool shouldRepaint(_TabIndicatorPainter old) => old.isSelected != isSelected;
 }
 
 // ─────────────────────────── HERO BANNER ───────────────────────────
@@ -542,6 +631,8 @@ class _BannerCard extends StatelessWidget {
     );
   }
 }
+
+
 
 // ─────────────────────────── SECTION HEADER ───────────────────────────
 class _SectionHeader extends StatelessWidget {
@@ -2068,34 +2159,73 @@ class _ChatBubble extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 6),
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                shape: BoxShape.circle,
-                // gradient: const LinearGradient(colors: [NIAColors.teal, Color(0xFF00D8C5)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.whiteColor,
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: SvgPicture.asset(
-                  'assets/icons/ic_chat.svg',
-                  width: 22,
-                  height: 22,
-                  colorFilter: const ColorFilter.mode(
-                    Colors.white, // optional: make icon white
-                    BlendMode.srcIn,
+            // Container(
+            //   width: 48,
+            //   height: 48,
+            //   decoration: BoxDecoration(
+            //     color: AppColors.primaryColor,
+            //     shape: BoxShape.circle,
+            //     // gradient: const LinearGradient(colors: [NIAColors.teal, Color(0xFF00D8C5)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            //     boxShadow: [
+            //       BoxShadow(
+            //         color: AppColors.whiteColor,
+            //         blurRadius: 12,
+            //         offset: const Offset(0, 4),
+            //       ),
+            //     ],
+            //   ),
+            //   child: Center(
+            //     child: SvgPicture.asset(
+            //       'assets/icons/ic_chat.svg',
+            //       width: 22,
+            //       height: 22,
+            //       colorFilter: const ColorFilter.mode(
+            //         Colors.white, // optional: make icon white
+            //         BlendMode.srcIn,
+            //       ),
+            //     ),
+            //   ),
+            //   // const Icon(Icons.chat_bubble_rounded, color: Colors.white, size: 22),
+            // ),
+            GestureDetector(
+              // onTap: () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => const ChatScreen(),
+              //     ),
+              //   );
+              // },
+              onTap: () {
+                ChatOverlay.show(context);
+              },
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.whiteColor,
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/icons/ic_chat.svg',
+                    width: 22,
+                    height: 22,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
-              // const Icon(Icons.chat_bubble_rounded, color: Colors.white, size: 22),
-            ),
+            )
           ],
         ),
       ],
@@ -2122,4 +2252,214 @@ class _TrianglePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+
+class ChatOverlay {
+  static OverlayEntry? _overlayEntry;
+
+  static void show(BuildContext context) {
+    if (_overlayEntry != null) return;
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => const _ChatOverlayWidget(),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  static void hide() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+}
+
+class _ChatOverlayWidget extends StatefulWidget {
+  const _ChatOverlayWidget();
+
+  @override
+  State<_ChatOverlayWidget> createState() => _ChatOverlayWidgetState();
+}
+
+class _ChatOverlayWidgetState extends State<_ChatOverlayWidget> {
+  final TextEditingController controller = TextEditingController();
+  List<Map<String, String>> messages = [];
+  bool isLoading = false;
+
+  Future<String> getAIResponse(String message) async {
+    const apiKey = "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"; // 🔴 replace this
+
+    final response = await http.post(
+      Uri.parse("https://api.openai.com/v1/chat/completions"),
+      headers: {
+        "Authorization": "Bearer $apiKey",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "model": "gpt-4o-mini",
+        "messages": [
+          {"role": "user", "content": message}
+        ]
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+    return data['choices'][0]['message']['content'];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 120,
+      right: 16,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          width: 300,
+          height: 420,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 12,
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              // 🔵 Header
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(14),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "NIA Chat",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    GestureDetector(
+                      onTap: () => ChatOverlay.hide(),
+                      child: const Icon(Icons.close, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+
+              // 💬 Messages
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final msg = messages[index];
+
+                    return Align(
+                      alignment: msg["role"] == "user"
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: msg["role"] == "user"
+                              ? Colors.blue
+                              : Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          msg["text"] ?? "",
+                          style: TextStyle(
+                            color: msg["role"] == "user"
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              // ✏️ Input
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: controller,
+                        decoration: const InputDecoration(
+                          hintText: "Type message...",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+
+                    // 🚀 Send Button
+                    IconButton(
+                      icon: isLoading
+                          ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                          : const Icon(Icons.send),
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                        final userMessage = controller.text.trim();
+                        if (userMessage.isEmpty) return;
+
+                        setState(() {
+                          messages.add({
+                            "role": "user",
+                            "text": userMessage
+                          });
+                          isLoading = true;
+                        });
+
+                        controller.clear();
+
+                        try {
+                          final aiReply =
+                          await getAIResponse(userMessage);
+
+                          setState(() {
+                            messages.add({
+                              "role": "ai",
+                              "text": aiReply
+                            });
+                          });
+                        } catch (e) {
+                          setState(() {
+                            messages.add({
+                              "role": "ai",
+                              "text": "Error: $e"
+                            });
+                          });
+                        }
+
+                        setState(() {
+                          isLoading = false;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

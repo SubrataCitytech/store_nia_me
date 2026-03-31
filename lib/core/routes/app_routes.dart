@@ -13,6 +13,7 @@ class AppRoutes {
   static const String main = '/main';
 
 
+
   //Route map
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => const SplashScreen(),
