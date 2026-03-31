@@ -35,7 +35,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _bannerPage = 0;
   bool _chatOpen = true;
-  final PageController _bannerCtrl = PageController();
+  final PageController _bannerCtrl = PageController(
+    viewportFraction: 0.85,
+  );
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -64,6 +66,7 @@ class _HomeState extends State<Home> {
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
+                        const SizedBox(height: 10),
                         _HeroBannerSection(
                           controller: _bannerCtrl,
                           currentPage: _bannerPage,
@@ -431,13 +434,13 @@ class _TabIndicatorPainter extends CustomPainter {
 // ─────────────────────────── HERO BANNER ───────────────────────────
 class _BannerData {
   final String title, subtitle;
-  final List<Color> gradient;
-  final Color accentColor;
+  // final List<Color> gradient;
+  // final Color accentColor;
   const _BannerData({
     required this.title,
     required this.subtitle,
-    required this.gradient,
-    required this.accentColor,
+    // required this.gradient,
+    // required this.accentColor,
   });
 }
 
@@ -450,20 +453,20 @@ class _HeroBannerSection extends StatelessWidget {
     _BannerData(
       title: 'Breathe Easy.\nLive Better.',
       subtitle: 'Discover Orée Air Purifiers,\nCoolers, Fans & More.',
-      gradient: [Color(0xFFD8F5F1), Color(0xFFA2E8E1), Color(0xFF6DD4CA)],
-      accentColor: NIAColors.teal,
+      // gradient: [Color(0xFFD8F5F1), Color(0xFFA2E8E1), Color(0xFF6DD4CA)],
+      // accentColor: NIAColors.teal,
     ),
     _BannerData(
       title: 'Smart Living\nStarts Here.',
       subtitle: 'Upgrade your home with\ntop-brand electronics.',
-      gradient: [Color(0xFFECEEFF), Color(0xFFD0D5FF), Color(0xFFA8B0FF)],
-      accentColor: NIAColors.purple,
+      // gradient: [Color(0xFFECEEFF), Color(0xFFD0D5FF), Color(0xFFA8B0FF)],
+      // accentColor: NIAColors.purple,
     ),
     _BannerData(
       title: 'Stay Cool\nAll Season.',
       subtitle: 'Split ACs, Portable Coolers\n& Tower Fans.',
-      gradient: [Color(0xFFFFF8E1), Color(0xFFFFECB3), Color(0xFFFFCC80)],
-      accentColor: NIAColors.amber,
+      // gradient: [Color(0xFFFFF8E1), Color(0xFFFFECB3), Color(0xFFFFCC80)],
+      // accentColor: NIAColors.amber,
     ),
   ];
 
@@ -476,12 +479,13 @@ class _HeroBannerSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: NIAColors.white,
+      color: AppColors.pageBackgroundColor,
       child: Column(
         children: [
           SizedBox(
-            height: 168,
+            height: 190,
             child: PageView.builder(
+              padEnds: false,
               controller: controller,
               onPageChanged: onPageChanged,
               itemCount: _banners.length,
@@ -521,19 +525,20 @@ class _BannerCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       decoration: BoxDecoration(
+        color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(18),
-        gradient: LinearGradient(
-          colors: data.gradient,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: data.accentColor.withOpacity(0.2),
-            blurRadius: 18,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        // gradient: LinearGradient(
+        //   // colors: data.gradient,
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        // ),
+        // boxShadow: [
+        //   BoxShadow(
+        //     // color: data.accentColor.withOpacity(0.2),
+        //     blurRadius: 18,
+        //     offset: const Offset(0, 6),
+        //   ),
+        // ],
       ),
       child: Stack(
         children: [
@@ -545,7 +550,7 @@ class _BannerCard extends StatelessWidget {
               height: 130,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: data.accentColor.withOpacity(0.13),
+                // color: data.accentColor.withOpacity(0.13),
               ),
             ),
           ),
@@ -557,7 +562,7 @@ class _BannerCard extends StatelessWidget {
               height: 75,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: data.accentColor.withOpacity(0.10),
+                // color: data.accentColor.withOpacity(0.10),
               ),
             ),
           ),
@@ -569,7 +574,7 @@ class _BannerCard extends StatelessWidget {
               child: Icon(
                 Icons.air_rounded,
                 size: 95,
-                color: data.accentColor.withOpacity(0.28),
+                // color: data.accentColor.withOpacity(0.28),
               ),
             ),
           ),
@@ -597,32 +602,7 @@ class _BannerCard extends StatelessWidget {
                     height: 1.45,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: data.accentColor,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: data.accentColor.withOpacity(0.35),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: const Text(
-                    'Shop Now',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+
               ],
             ),
           ),
@@ -2287,8 +2267,8 @@ class _ChatOverlayWidgetState extends State<_ChatOverlayWidget> {
   bool isLoading = false;
 
   Future<String> getAIResponse(String message) async {
-
-    const apiKey = "your_api_key";
+   const apiKey = "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"; // 🔴 replace this
+    ///const apiKey = "your_api_key";
     final response = await http.post(
       Uri.parse("https://api.openai.com/v1/chat/completions"),
       headers: {
