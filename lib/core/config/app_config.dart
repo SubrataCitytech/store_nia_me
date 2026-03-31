@@ -7,7 +7,7 @@ class AppConfig {
 
   // ✅ API Secret Key
   static const String apiSecretKey = 'a112i122f120g111a97l105m111t114';
-  /// const apiKey = "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"; // 🔴 replace this
+
 
   // ✅ Store ID
   static const int storeId = 1;
