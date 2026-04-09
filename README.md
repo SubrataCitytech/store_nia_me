@@ -6,7 +6,7 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
-# ![logo-main_nia-logo.png](assets/icons/logo-main_nia-logo.png) E-Commerce App
+# Flutter E-Commerce App
 
 A modern and scalable **Flutter-based E-commerce application** designed for seamless shopping experiences.
 Built with performance, clean UI, and real-world usability in mind.
@@ -102,7 +102,7 @@ Feel free to fork the repo and submit a pull request.
 
 ## 📄 License
 
-This project is licensed under the ![citytech_logo.png](assets/icons/citytech_logo.png) **_[Citytech](https://www.citytechcorp.com/contact-us/)_** License.
+This project is licensed under the **_Subrata_** License.
 
 ---
 
